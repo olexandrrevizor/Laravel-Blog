@@ -36,9 +36,16 @@ LB.news = function (document, $) {
 
     },
 
+    remove_post_thumb = function () {
+        var searched_image = $('.searched_image');
+        searched_image.addClass('fade-out');
+        searched_image.remove();
+    },
+
     set_default_values = function (fields) {
         for(var i = 0, max = fields.length; i < max; i++)
           $('#' + fields[i].id).val(fields[i].default_value);
+        remove_post_thumb();
     },
 
     format_message = function (message_text, fields) {
@@ -67,7 +74,7 @@ LB.news = function (document, $) {
             {
                 id: 'thumb',
                 value: form['thumb'].value,
-                defaul_value: 'Image url'
+                default_value: 'Image url'
             }
         ],
             status = validate_form(fields);
@@ -140,7 +147,7 @@ LB.news = function (document, $) {
                 {
                     id: 'thumb',
                     value: form['thumb'].value,
-                    defaul_value: 'Image url'
+                    default_value: 'Image url'
                 }
             ],
             status = validate_form(fields),
@@ -164,38 +171,60 @@ LB.news = function (document, $) {
                 if(data.result)
                     format_message('<strong>Success!</strong> News updated in database!');
                 else
-                    format_message('<strong>Danger!</strong> News updated in database!');
+                    format_message('<strong>Danger!</strong> News didn`t updated in database!');
             },
             error: function () {
 
             }
-        })
+        });
 
         return false;
     },
 
-    get_random_image = function() {
-        var keyword = "lisa ann";
+    get_random_image_by_title = function(search_image_btn) {
+        var title_value = $('#title').val(),
+            searched_image = $('.searched_image');
+        if(title_value.length == 0) {
+            format_message('<strong>Danger!</strong> Set title before!');
+            return false;
+        }
+        if(searched_image.length > 0) {
+            searched_image.addClass('fade-out');
+            searched_image.remove();
+        }
         $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
             {
-                tags: keyword,
+                tags: title_value,
                 tagmode: "any",
                 format: "json"
             },
             function(data) {
                 var rnd = Math.floor(Math.random() * data.items.length);
-                console.log(data.items.length);
                 var image_src = data.items[rnd]['media']['m'].replace("_m", "_b");
 
-                $('body').css('background-image', "url('" + image_src + "')");
+                $("#" + search_image_btn.id).parent().append("<img src='" + image_src + "' class='searched_image fade-in' alt='image'/>");
 
             });
+        return false;
+    },
+    set_random_image = function () {
+        var searched_image_src = $('.searched_image').attr('src'),
+            thumb_image = $('#thumb');
+
+        if(searched_image_src.length == 0)
+            return false;
+
+        thumb_image.attr('value', searched_image_src).attr('placeholder', searched_image_src);
+
+        return false;
     };
     _sys.registerAutoload(ajax_setup);
     /*_sys.registerAutoload(test);*/
     return {
         form_proccess: send_form,
         delete_news: delete_news,
-        update_news: update_news
+        update_news: update_news,
+        get_random_image_by_title: get_random_image_by_title,
+        set_random_image: set_random_image
     }
-}(document, jQuery)
+}(document, jQuery);

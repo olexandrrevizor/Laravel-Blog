@@ -13,9 +13,16 @@
                         <textarea class="form-control" type="textarea" id="content" name="content" placeholder="Content"></textarea>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="thumb" name="thumb" placeholder="Image Url">
+                        <input type="text" class="form-control" id="thumb" name="thumb" placeholder="Image Url" disabled>
                     </div>
-                    <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">Submit Form</button>
+                    <div class="form-group">
+                        <button id="search_image" name="search_image" onclick="return LB.news.get_random_image_by_title(this);" class="btn btn-primary pull-right">Search image</button>
+                        <button class="btn btn-primary pull-right add_url" onclick="return LB.news.set_random_image();">Add url image</button>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">Submit Form</button>
+                    </div>
                 </form>
             </div>
         </div>

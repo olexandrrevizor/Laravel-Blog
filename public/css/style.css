@@ -194,6 +194,17 @@ img {
     animation-fill-mode: forwards;
 }
 
+.add_url {
+    margin-right: 10px;
+}
+
+.searched_image {
+    display: block;
+    margin: 10px auto;
+    max-width: 300px;
+    width: 100%;
+}
+
 #loginbox {
     margin-top: 30px;
 }
